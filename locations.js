@@ -4,6 +4,15 @@
 // Coordinates let us fetch the forecast directly, without a geocoding call.
 // Countries and cities are listed alphabetically.
 const LOCATIONS = {
+  Albania: [
+    { name: "Durrës", latitude: 41.3231, longitude: 19.4414 },
+    { name: "Tirana", latitude: 41.3275, longitude: 19.8187 },
+    { name: "Vlorë", latitude: 40.4667, longitude: 19.4897 },
+  ],
+  Andorra: [
+    { name: "Andorra la Vella", latitude: 42.5063, longitude: 1.5218 },
+    { name: "Escaldes-Engordany", latitude: 42.51, longitude: 1.54 },
+  ],
   Australia: [
     { name: "Adelaide", latitude: -34.9285, longitude: 138.6007 },
     { name: "Brisbane", latitude: -27.4698, longitude: 153.0251 },
@@ -11,12 +20,44 @@ const LOCATIONS = {
     { name: "Perth", latitude: -31.9505, longitude: 115.8605 },
     { name: "Sydney", latitude: -33.8688, longitude: 151.2093 },
   ],
+  Austria: [
+    { name: "Graz", latitude: 47.0707, longitude: 15.4395 },
+    { name: "Innsbruck", latitude: 47.2692, longitude: 11.4041 },
+    { name: "Linz", latitude: 48.3069, longitude: 14.2858 },
+    { name: "Salzburg", latitude: 47.8095, longitude: 13.055 },
+    { name: "Vienna", latitude: 48.2082, longitude: 16.3738 },
+  ],
+  Belarus: [
+    { name: "Brest", latitude: 52.0975, longitude: 23.734 },
+    { name: "Gomel", latitude: 52.4345, longitude: 30.9754 },
+    { name: "Minsk", latitude: 53.9006, longitude: 27.559 },
+    { name: "Mogilev", latitude: 53.9168, longitude: 30.3449 },
+  ],
+  Belgium: [
+    { name: "Antwerp", latitude: 51.2194, longitude: 4.4025 },
+    { name: "Bruges", latitude: 51.2093, longitude: 3.2247 },
+    { name: "Brussels", latitude: 50.8503, longitude: 4.3517 },
+    { name: "Ghent", latitude: 51.0543, longitude: 3.7174 },
+    { name: "Liège", latitude: 50.6326, longitude: 5.5797 },
+  ],
+  "Bosnia and Herzegovina": [
+    { name: "Banja Luka", latitude: 44.7722, longitude: 17.191 },
+    { name: "Mostar", latitude: 43.3438, longitude: 17.8078 },
+    { name: "Sarajevo", latitude: 43.8563, longitude: 18.4131 },
+    { name: "Tuzla", latitude: 44.538, longitude: 18.6761 },
+  ],
   Brazil: [
     { name: "Brasília", latitude: -15.7939, longitude: -47.8828 },
     { name: "Fortaleza", latitude: -3.7319, longitude: -38.5267 },
     { name: "Rio de Janeiro", latitude: -22.9068, longitude: -43.1729 },
     { name: "Salvador", latitude: -12.9777, longitude: -38.5016 },
     { name: "São Paulo", latitude: -23.5505, longitude: -46.6333 },
+  ],
+  Bulgaria: [
+    { name: "Burgas", latitude: 42.5048, longitude: 27.4626 },
+    { name: "Plovdiv", latitude: 42.1354, longitude: 24.7453 },
+    { name: "Sofia", latitude: 42.6977, longitude: 23.3219 },
+    { name: "Varna", latitude: 43.2141, longitude: 27.9147 },
   ],
   Canada: [
     { name: "Calgary", latitude: 51.0447, longitude: -114.0719 },
@@ -32,6 +73,42 @@ const LOCATIONS = {
     { name: "Shanghai", latitude: 31.2304, longitude: 121.4737 },
     { name: "Shenzhen", latitude: 22.5431, longitude: 114.0579 },
   ],
+  Croatia: [
+    { name: "Dubrovnik", latitude: 42.6507, longitude: 18.0944 },
+    { name: "Osijek", latitude: 45.555, longitude: 18.6955 },
+    { name: "Rijeka", latitude: 45.3271, longitude: 14.4422 },
+    { name: "Split", latitude: 43.5081, longitude: 16.4402 },
+    { name: "Zagreb", latitude: 45.815, longitude: 15.9819 },
+  ],
+  Cyprus: [
+    { name: "Larnaca", latitude: 34.9229, longitude: 33.6233 },
+    { name: "Limassol", latitude: 34.7071, longitude: 33.0226 },
+    { name: "Nicosia", latitude: 35.1856, longitude: 33.3823 },
+  ],
+  Czechia: [
+    { name: "Brno", latitude: 49.1951, longitude: 16.6068 },
+    { name: "Ostrava", latitude: 49.8209, longitude: 18.2625 },
+    { name: "Plzeň", latitude: 49.7384, longitude: 13.3736 },
+    { name: "Prague", latitude: 50.0755, longitude: 14.4378 },
+  ],
+  Denmark: [
+    { name: "Aalborg", latitude: 57.0488, longitude: 9.9217 },
+    { name: "Aarhus", latitude: 56.1629, longitude: 10.2039 },
+    { name: "Copenhagen", latitude: 55.6761, longitude: 12.5683 },
+    { name: "Odense", latitude: 55.4038, longitude: 10.4024 },
+  ],
+  Estonia: [
+    { name: "Narva", latitude: 59.3793, longitude: 28.1791 },
+    { name: "Tallinn", latitude: 59.437, longitude: 24.7536 },
+    { name: "Tartu", latitude: 58.3776, longitude: 26.729 },
+  ],
+  Finland: [
+    { name: "Espoo", latitude: 60.2055, longitude: 24.6559 },
+    { name: "Helsinki", latitude: 60.1699, longitude: 24.9384 },
+    { name: "Oulu", latitude: 65.0121, longitude: 25.4651 },
+    { name: "Tampere", latitude: 61.4978, longitude: 23.761 },
+    { name: "Turku", latitude: 60.4518, longitude: 22.2666 },
+  ],
   France: [
     { name: "Lyon", latitude: 45.764, longitude: 4.8357 },
     { name: "Marseille", latitude: 43.2965, longitude: 5.3698 },
@@ -46,12 +123,35 @@ const LOCATIONS = {
     { name: "Hamburg", latitude: 53.5511, longitude: 9.9937 },
     { name: "Munich", latitude: 48.1351, longitude: 11.582 },
   ],
+  Greece: [
+    { name: "Athens", latitude: 37.9838, longitude: 23.7275 },
+    { name: "Heraklion", latitude: 35.3387, longitude: 25.1442 },
+    { name: "Patras", latitude: 38.2466, longitude: 21.7346 },
+    { name: "Thessaloniki", latitude: 40.6401, longitude: 22.9444 },
+  ],
+  Hungary: [
+    { name: "Budapest", latitude: 47.4979, longitude: 19.0402 },
+    { name: "Debrecen", latitude: 47.5316, longitude: 21.6273 },
+    { name: "Miskolc", latitude: 48.1035, longitude: 20.7784 },
+    { name: "Szeged", latitude: 46.253, longitude: 20.1414 },
+  ],
+  Iceland: [
+    { name: "Akureyri", latitude: 65.6885, longitude: -18.1262 },
+    { name: "Kópavogur", latitude: 64.1126, longitude: -21.9127 },
+    { name: "Reykjavík", latitude: 64.1466, longitude: -21.9426 },
+  ],
   India: [
     { name: "Bengaluru", latitude: 12.9716, longitude: 77.5946 },
     { name: "Chennai", latitude: 13.0827, longitude: 80.2707 },
     { name: "Delhi", latitude: 28.7041, longitude: 77.1025 },
     { name: "Kolkata", latitude: 22.5726, longitude: 88.3639 },
     { name: "Mumbai", latitude: 19.076, longitude: 72.8777 },
+  ],
+  Ireland: [
+    { name: "Cork", latitude: 51.8985, longitude: -8.4756 },
+    { name: "Dublin", latitude: 53.3498, longitude: -6.2603 },
+    { name: "Galway", latitude: 53.2707, longitude: -9.0568 },
+    { name: "Limerick", latitude: 52.6638, longitude: -8.6267 },
   ],
   Italy: [
     { name: "Milan", latitude: 45.4642, longitude: 9.19 },
@@ -67,12 +167,54 @@ const LOCATIONS = {
     { name: "Tokyo", latitude: 35.6895, longitude: 139.6917 },
     { name: "Yokohama", latitude: 35.4437, longitude: 139.638 },
   ],
+  Kosovo: [
+    { name: "Peja", latitude: 42.6593, longitude: 20.2887 },
+    { name: "Pristina", latitude: 42.6629, longitude: 21.1655 },
+    { name: "Prizren", latitude: 42.2139, longitude: 20.7397 },
+  ],
+  Latvia: [
+    { name: "Daugavpils", latitude: 55.8714, longitude: 26.5161 },
+    { name: "Liepāja", latitude: 56.5046, longitude: 21.0108 },
+    { name: "Riga", latitude: 56.9496, longitude: 24.1052 },
+  ],
+  Liechtenstein: [
+    { name: "Schaan", latitude: 47.1654, longitude: 9.5089 },
+    { name: "Vaduz", latitude: 47.141, longitude: 9.5209 },
+  ],
+  Lithuania: [
+    { name: "Kaunas", latitude: 54.8985, longitude: 23.9036 },
+    { name: "Klaipėda", latitude: 55.7033, longitude: 21.1443 },
+    { name: "Vilnius", latitude: 54.6872, longitude: 25.2797 },
+  ],
+  Luxembourg: [
+    { name: "Esch-sur-Alzette", latitude: 49.4958, longitude: 5.9806 },
+    { name: "Luxembourg City", latitude: 49.6116, longitude: 6.1319 },
+  ],
+  Malta: [
+    { name: "Birkirkara", latitude: 35.8972, longitude: 14.4611 },
+    { name: "Sliema", latitude: 35.9122, longitude: 14.5043 },
+    { name: "Valletta", latitude: 35.8989, longitude: 14.5146 },
+  ],
   Mexico: [
     { name: "Cancún", latitude: 21.1619, longitude: -86.8515 },
     { name: "Guadalajara", latitude: 20.6597, longitude: -103.3496 },
     { name: "Mexico City", latitude: 19.4326, longitude: -99.1332 },
     { name: "Monterrey", latitude: 25.6866, longitude: -100.3161 },
     { name: "Tijuana", latitude: 32.5149, longitude: -117.0382 },
+  ],
+  Moldova: [
+    { name: "Bălți", latitude: 47.7615, longitude: 27.9296 },
+    { name: "Chișinău", latitude: 47.0105, longitude: 28.8638 },
+    { name: "Tiraspol", latitude: 46.8403, longitude: 29.6433 },
+  ],
+  Monaco: [
+    { name: "Monaco", latitude: 43.7384, longitude: 7.4246 },
+    { name: "Monte Carlo", latitude: 43.7404, longitude: 7.4274 },
+  ],
+  Montenegro: [
+    { name: "Herceg Novi", latitude: 42.4531, longitude: 18.5375 },
+    { name: "Nikšić", latitude: 42.7731, longitude: 18.9447 },
+    { name: "Podgorica", latitude: 42.4304, longitude: 19.2594 },
   ],
   Netherlands: [
     { name: "Amsterdam", latitude: 52.3676, longitude: 4.9041 },
@@ -81,6 +223,18 @@ const LOCATIONS = {
     { name: "The Hague", latitude: 52.0705, longitude: 4.3007 },
     { name: "Utrecht", latitude: 52.0907, longitude: 5.1214 },
   ],
+  "North Macedonia": [
+    { name: "Bitola", latitude: 41.0297, longitude: 21.3292 },
+    { name: "Kumanovo", latitude: 42.1322, longitude: 21.7144 },
+    { name: "Skopje", latitude: 41.9981, longitude: 21.4254 },
+  ],
+  Norway: [
+    { name: "Bergen", latitude: 60.3913, longitude: 5.3221 },
+    { name: "Oslo", latitude: 59.9139, longitude: 10.7522 },
+    { name: "Stavanger", latitude: 58.97, longitude: 5.7331 },
+    { name: "Tromsø", latitude: 69.6492, longitude: 18.9553 },
+    { name: "Trondheim", latitude: 63.4305, longitude: 10.3951 },
+  ],
   Poland: [
     { name: "Gdańsk", latitude: 54.352, longitude: 18.6466 },
     { name: "Kraków", latitude: 50.0647, longitude: 19.945 },
@@ -88,12 +242,67 @@ const LOCATIONS = {
     { name: "Warsaw", latitude: 52.2297, longitude: 21.0122 },
     { name: "Wrocław", latitude: 51.1079, longitude: 17.0385 },
   ],
+  Portugal: [
+    { name: "Braga", latitude: 41.5454, longitude: -8.4265 },
+    { name: "Coimbra", latitude: 40.2033, longitude: -8.4103 },
+    { name: "Faro", latitude: 37.0194, longitude: -7.9304 },
+    { name: "Lisbon", latitude: 38.7223, longitude: -9.1393 },
+    { name: "Porto", latitude: 41.1579, longitude: -8.6291 },
+  ],
+  Romania: [
+    { name: "Brașov", latitude: 45.6579, longitude: 25.6012 },
+    { name: "Bucharest", latitude: 44.4268, longitude: 26.1025 },
+    { name: "Cluj-Napoca", latitude: 46.7712, longitude: 23.6236 },
+    { name: "Iași", latitude: 47.1585, longitude: 27.6014 },
+    { name: "Timișoara", latitude: 45.7489, longitude: 21.2087 },
+  ],
+  "San Marino": [
+    { name: "San Marino", latitude: 43.9424, longitude: 12.4578 },
+    { name: "Serravalle", latitude: 43.9836, longitude: 12.4836 },
+  ],
+  Serbia: [
+    { name: "Belgrade", latitude: 44.7866, longitude: 20.4489 },
+    { name: "Kragujevac", latitude: 44.0142, longitude: 20.9394 },
+    { name: "Niš", latitude: 43.3209, longitude: 21.8958 },
+    { name: "Novi Sad", latitude: 45.2671, longitude: 19.8335 },
+  ],
+  Slovakia: [
+    { name: "Bratislava", latitude: 48.1486, longitude: 17.1077 },
+    { name: "Košice", latitude: 48.7164, longitude: 21.2611 },
+    { name: "Prešov", latitude: 48.9986, longitude: 21.2339 },
+    { name: "Žilina", latitude: 49.2231, longitude: 18.7398 },
+  ],
+  Slovenia: [
+    { name: "Celje", latitude: 46.2311, longitude: 15.2683 },
+    { name: "Ljubljana", latitude: 46.0569, longitude: 14.5058 },
+    { name: "Maribor", latitude: 46.5547, longitude: 15.6459 },
+  ],
   Spain: [
     { name: "Barcelona", latitude: 41.3851, longitude: 2.1734 },
     { name: "Bilbao", latitude: 43.263, longitude: -2.935 },
     { name: "Madrid", latitude: 40.4168, longitude: -3.7038 },
     { name: "Seville", latitude: 37.3891, longitude: -5.9845 },
     { name: "Valencia", latitude: 39.4699, longitude: -0.3763 },
+  ],
+  Sweden: [
+    { name: "Gothenburg", latitude: 57.7089, longitude: 11.9746 },
+    { name: "Malmö", latitude: 55.605, longitude: 13.0038 },
+    { name: "Stockholm", latitude: 59.3293, longitude: 18.0686 },
+    { name: "Uppsala", latitude: 59.8586, longitude: 17.6389 },
+  ],
+  Switzerland: [
+    { name: "Basel", latitude: 47.5596, longitude: 7.5886 },
+    { name: "Bern", latitude: 46.948, longitude: 7.4474 },
+    { name: "Geneva", latitude: 46.2044, longitude: 6.1432 },
+    { name: "Lausanne", latitude: 46.5197, longitude: 6.6323 },
+    { name: "Zürich", latitude: 47.3769, longitude: 8.5417 },
+  ],
+  Turkey: [
+    { name: "Ankara", latitude: 39.9334, longitude: 32.8597 },
+    { name: "Antalya", latitude: 36.8969, longitude: 30.7133 },
+    { name: "Bursa", latitude: 40.1885, longitude: 29.061 },
+    { name: "Istanbul", latitude: 41.0082, longitude: 28.9784 },
+    { name: "Izmir", latitude: 38.4237, longitude: 27.1428 },
   ],
   Ukraine: [
     { name: "Dnipro", latitude: 48.4647, longitude: 35.0462 },
@@ -116,5 +325,8 @@ const LOCATIONS = {
     { name: "Miami", latitude: 25.7617, longitude: -80.1918 },
     { name: "New York", latitude: 40.7128, longitude: -74.006 },
     { name: "San Francisco", latitude: 37.7749, longitude: -122.4194 },
+  ],
+  "Vatican City": [
+    { name: "Vatican City", latitude: 41.9029, longitude: 12.4534 },
   ],
 };
