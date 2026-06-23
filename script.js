@@ -39,13 +39,9 @@ function describeWeather(code) {
   return WEATHER_CODE_MAP[code] || FALLBACK_WEATHER;
 }
 
-// Error type so the UI can tell "city not found" apart from network errors.
-class CityNotFoundError extends Error {}
-
 // --- DOM references ---
-const form = document.getElementById("search-form");
-const input = document.getElementById("city-input");
-const button = document.getElementById("search-button");
+const countrySelect = document.getElementById("country-select");
+const citySelect = document.getElementById("city-select");
 const statusEl = document.getElementById("status");
 
 const currentEl = document.getElementById("current");
@@ -64,22 +60,6 @@ let map = null;
 let marker = null;
 
 // --- API calls ---
-async function geocodeCity(name) {
-  const url =
-    "https://geocoding-api.open-meteo.com/v1/search?name=" +
-    encodeURIComponent(name) +
-    "&count=1&language=en&format=json";
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Geocoding request failed (" + res.status + ")");
-
-  const data = await res.json();
-  if (!data.results || data.results.length === 0) {
-    throw new CityNotFoundError('No results for "' + name + '"');
-  }
-  return data.results[0];
-}
-
 async function getForecast(lat, lon) {
   const url =
     "https://api.open-meteo.com/v1/forecast?latitude=" +
@@ -182,17 +162,17 @@ function setStatus(message, isError) {
 }
 
 function setLoading(isLoading) {
-  button.disabled = isLoading;
-  button.textContent = isLoading ? "Loading…" : "Search";
+  countrySelect.disabled = isLoading;
+  // Keep the city select disabled while loading; re-enable only if a country is chosen.
+  citySelect.disabled = isLoading || !countrySelect.value;
 }
 
 // --- Main flow ---
-async function searchCity(name) {
+async function showWeatherFor(place) {
   setLoading(true);
-  setStatus("Loading weather for " + name + "…", false);
+  setStatus("Loading weather for " + place.name + "…", false);
 
   try {
-    const place = await geocodeCity(name);
     const forecast = await getForecast(place.latitude, place.longitude);
 
     renderCurrent(forecast.current, place);
@@ -204,9 +184,7 @@ async function searchCity(name) {
     mapSection.hidden = true;
     forecastSection.hidden = true;
 
-    if (err instanceof CityNotFoundError) {
-      setStatus('City "' + name + '" not found. Check the spelling and try again.', true);
-    } else if (err instanceof TypeError) {
+    if (err instanceof TypeError) {
       // fetch throws TypeError on network failure / CORS / offline.
       setStatus("Network error. Please check your connection and try again.", true);
     } else {
@@ -218,18 +196,135 @@ async function searchCity(name) {
   }
 }
 
-form.addEventListener("submit", function (event) {
-  event.preventDefault();
-  const name = input.value.trim();
-  if (!name) {
-    setStatus("Please enter a city name.", true);
-    return;
-  }
-  searchCity(name);
+// --- Populate the dropdowns ---
+function addOption(select, value, label) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = label;
+  select.appendChild(option);
+}
+
+function populateCountries() {
+  Object.keys(LOCATIONS).forEach(function (country) {
+    addOption(countrySelect, country, country);
+  });
+}
+
+function populateCities(country) {
+  // Reset to just the placeholder, then add the country's cities.
+  citySelect.length = 1;
+  citySelect.selectedIndex = 0;
+
+  const cities = LOCATIONS[country] || [];
+  cities.forEach(function (city, index) {
+    addOption(citySelect, String(index), city.name);
+  });
+  citySelect.disabled = cities.length === 0;
+}
+
+countrySelect.addEventListener("change", function () {
+  populateCities(countrySelect.value);
+  // No city chosen yet; clear any previously shown weather.
+  setStatus("Now pick a city.", false);
+  currentEl.hidden = true;
+  mapSection.hidden = true;
+  forecastSection.hidden = true;
 });
 
-// Load a default city on first paint so the page isn't empty.
+citySelect.addEventListener("change", function () {
+  const country = countrySelect.value;
+  const city = LOCATIONS[country] && LOCATIONS[country][Number(citySelect.value)];
+  if (!city) return;
+
+  showWeatherFor({
+    name: city.name,
+    latitude: city.latitude,
+    longitude: city.longitude,
+    country: country,
+  });
+});
+
+// --- Exchange rates widget ---
+// Coinbase public spot-price API (no key). Pair format matches "BTC-USD".
+// A pair Coinbase doesn't list gracefully shows "n/a".
+const RATE_PAIRS = ["BTC-USD", "ETH-USD"];
+const ratesList = document.getElementById("rates-list");
+const ratesUpdated = document.getElementById("rates-updated");
+
+async function fetchSpotPrice(pair) {
+  const res = await fetch("https://api.coinbase.com/v2/prices/" + pair + "/spot");
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return data.data.amount; // string, e.g. "62289.025"
+}
+
+function formatUsd(amount) {
+  return Number(amount).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+}
+
+function buildRatesRows() {
+  ratesList.innerHTML = "";
+  RATE_PAIRS.forEach(function (pair) {
+    const li = document.createElement("li");
+    li.className = "rate";
+    li.innerHTML =
+      '<span class="rate__pair">' +
+      pair +
+      '</span><span class="rate__price" data-pair="' +
+      pair +
+      '">…</span>';
+    ratesList.appendChild(li);
+  });
+}
+
+async function loadRates() {
+  await Promise.all(
+    RATE_PAIRS.map(async function (pair) {
+      const priceEl = ratesList.querySelector('[data-pair="' + pair + '"]');
+      if (!priceEl) return;
+      try {
+        const amount = await fetchSpotPrice(pair);
+        priceEl.textContent = formatUsd(amount);
+        priceEl.classList.remove("rate__price--na");
+      } catch (err) {
+        priceEl.textContent = "n/a";
+        priceEl.classList.add("rate__price--na");
+      }
+    })
+  );
+  ratesUpdated.textContent = "Updated " + new Date().toLocaleTimeString("en-US");
+}
+
 window.addEventListener("DOMContentLoaded", function () {
-  input.value = "London";
-  searchCity("London");
+  buildRatesRows();
+  loadRates();
+  // Refresh prices every 60 seconds.
+  setInterval(loadRates, 60000);
+});
+
+// On first paint: fill the country list and preselect a default location.
+window.addEventListener("DOMContentLoaded", function () {
+  populateCountries();
+
+  const defaultCountry = "United Kingdom";
+  const defaultCityName = "London";
+  countrySelect.value = defaultCountry;
+  populateCities(defaultCountry);
+
+  const cityIndex = LOCATIONS[defaultCountry].findIndex(function (c) {
+    return c.name === defaultCityName;
+  });
+  if (cityIndex >= 0) {
+    citySelect.value = String(cityIndex);
+    const city = LOCATIONS[defaultCountry][cityIndex];
+    showWeatherFor({
+      name: city.name,
+      latitude: city.latitude,
+      longitude: city.longitude,
+      country: defaultCountry,
+    });
+  }
 });

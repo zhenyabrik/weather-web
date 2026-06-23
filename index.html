@@ -25,24 +25,33 @@
   ></script>
 </head>
 <body>
-  <main class="container">
+  <div class="layout">
+    <aside class="rates card" aria-label="Exchange rates">
+      <h2 class="rates__title">Rates</h2>
+      <ul id="rates-list" class="rates__list"></ul>
+      <p id="rates-updated" class="rates__updated"></p>
+    </aside>
+
+    <main class="container">
     <header class="app-header">
       <h1>Weather</h1>
-      <p class="subtitle">Search any city for current conditions and a 7-day forecast.</p>
+      <p class="subtitle">Pick a country and city for current conditions and a 7-day forecast.</p>
     </header>
 
-    <form id="search-form" class="search" role="search" autocomplete="off">
-      <input
-        id="city-input"
-        class="search__input"
-        type="text"
-        name="city"
-        placeholder="Enter a city, e.g. Tokyo"
-        aria-label="City name"
-        required
-      />
-      <button id="search-button" class="search__button" type="submit">Search</button>
-    </form>
+    <div class="selector">
+      <label class="selector__field">
+        <span class="selector__label">Country</span>
+        <select id="country-select" class="selector__input">
+          <option value="" disabled selected>Select a country…</option>
+        </select>
+      </label>
+      <label class="selector__field">
+        <span class="selector__label">City</span>
+        <select id="city-select" class="selector__input" disabled>
+          <option value="" disabled selected>Select a city…</option>
+        </select>
+      </label>
+    </div>
 
     <p id="status" class="status" role="status" aria-live="polite"></p>
 
@@ -85,8 +94,10 @@
         data-full-width-responsive="true"
       ></ins>
     </aside>
-  </main>
+    </main>
+  </div>
 
+  <script src="locations.js" defer></script>
   <script src="script.js" defer></script>
   <!-- Request the ad once the page has loaded. -->
   <script>

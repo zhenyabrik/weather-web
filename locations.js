@@ -1,0 +1,120 @@
+"use strict";
+
+// Built-in country -> cities dataset with coordinates.
+// Coordinates let us fetch the forecast directly, without a geocoding call.
+// Countries and cities are listed alphabetically.
+const LOCATIONS = {
+  Australia: [
+    { name: "Adelaide", latitude: -34.9285, longitude: 138.6007 },
+    { name: "Brisbane", latitude: -27.4698, longitude: 153.0251 },
+    { name: "Melbourne", latitude: -37.8136, longitude: 144.9631 },
+    { name: "Perth", latitude: -31.9505, longitude: 115.8605 },
+    { name: "Sydney", latitude: -33.8688, longitude: 151.2093 },
+  ],
+  Brazil: [
+    { name: "Brasília", latitude: -15.7939, longitude: -47.8828 },
+    { name: "Fortaleza", latitude: -3.7319, longitude: -38.5267 },
+    { name: "Rio de Janeiro", latitude: -22.9068, longitude: -43.1729 },
+    { name: "Salvador", latitude: -12.9777, longitude: -38.5016 },
+    { name: "São Paulo", latitude: -23.5505, longitude: -46.6333 },
+  ],
+  Canada: [
+    { name: "Calgary", latitude: 51.0447, longitude: -114.0719 },
+    { name: "Montreal", latitude: 45.5017, longitude: -73.5673 },
+    { name: "Ottawa", latitude: 45.4215, longitude: -75.6972 },
+    { name: "Toronto", latitude: 43.6532, longitude: -79.3832 },
+    { name: "Vancouver", latitude: 49.2827, longitude: -123.1207 },
+  ],
+  China: [
+    { name: "Beijing", latitude: 39.9042, longitude: 116.4074 },
+    { name: "Chengdu", latitude: 30.5728, longitude: 104.0668 },
+    { name: "Guangzhou", latitude: 23.1291, longitude: 113.2644 },
+    { name: "Shanghai", latitude: 31.2304, longitude: 121.4737 },
+    { name: "Shenzhen", latitude: 22.5431, longitude: 114.0579 },
+  ],
+  France: [
+    { name: "Lyon", latitude: 45.764, longitude: 4.8357 },
+    { name: "Marseille", latitude: 43.2965, longitude: 5.3698 },
+    { name: "Nice", latitude: 43.7102, longitude: 7.262 },
+    { name: "Paris", latitude: 48.8566, longitude: 2.3522 },
+    { name: "Toulouse", latitude: 43.6047, longitude: 1.4442 },
+  ],
+  Germany: [
+    { name: "Berlin", latitude: 52.52, longitude: 13.405 },
+    { name: "Cologne", latitude: 50.9375, longitude: 6.9603 },
+    { name: "Frankfurt", latitude: 50.1109, longitude: 8.6821 },
+    { name: "Hamburg", latitude: 53.5511, longitude: 9.9937 },
+    { name: "Munich", latitude: 48.1351, longitude: 11.582 },
+  ],
+  India: [
+    { name: "Bengaluru", latitude: 12.9716, longitude: 77.5946 },
+    { name: "Chennai", latitude: 13.0827, longitude: 80.2707 },
+    { name: "Delhi", latitude: 28.7041, longitude: 77.1025 },
+    { name: "Kolkata", latitude: 22.5726, longitude: 88.3639 },
+    { name: "Mumbai", latitude: 19.076, longitude: 72.8777 },
+  ],
+  Italy: [
+    { name: "Milan", latitude: 45.4642, longitude: 9.19 },
+    { name: "Naples", latitude: 40.8518, longitude: 14.2681 },
+    { name: "Rome", latitude: 41.9028, longitude: 12.4964 },
+    { name: "Turin", latitude: 45.0703, longitude: 7.6869 },
+    { name: "Venice", latitude: 45.4408, longitude: 12.3155 },
+  ],
+  Japan: [
+    { name: "Kyoto", latitude: 35.0116, longitude: 135.7681 },
+    { name: "Osaka", latitude: 34.6937, longitude: 135.5023 },
+    { name: "Sapporo", latitude: 43.0618, longitude: 141.3545 },
+    { name: "Tokyo", latitude: 35.6895, longitude: 139.6917 },
+    { name: "Yokohama", latitude: 35.4437, longitude: 139.638 },
+  ],
+  Mexico: [
+    { name: "Cancún", latitude: 21.1619, longitude: -86.8515 },
+    { name: "Guadalajara", latitude: 20.6597, longitude: -103.3496 },
+    { name: "Mexico City", latitude: 19.4326, longitude: -99.1332 },
+    { name: "Monterrey", latitude: 25.6866, longitude: -100.3161 },
+    { name: "Tijuana", latitude: 32.5149, longitude: -117.0382 },
+  ],
+  Netherlands: [
+    { name: "Amsterdam", latitude: 52.3676, longitude: 4.9041 },
+    { name: "Eindhoven", latitude: 51.4416, longitude: 5.4697 },
+    { name: "Rotterdam", latitude: 51.9244, longitude: 4.4777 },
+    { name: "The Hague", latitude: 52.0705, longitude: 4.3007 },
+    { name: "Utrecht", latitude: 52.0907, longitude: 5.1214 },
+  ],
+  Poland: [
+    { name: "Gdańsk", latitude: 54.352, longitude: 18.6466 },
+    { name: "Kraków", latitude: 50.0647, longitude: 19.945 },
+    { name: "Łódź", latitude: 51.7592, longitude: 19.456 },
+    { name: "Warsaw", latitude: 52.2297, longitude: 21.0122 },
+    { name: "Wrocław", latitude: 51.1079, longitude: 17.0385 },
+  ],
+  Spain: [
+    { name: "Barcelona", latitude: 41.3851, longitude: 2.1734 },
+    { name: "Bilbao", latitude: 43.263, longitude: -2.935 },
+    { name: "Madrid", latitude: 40.4168, longitude: -3.7038 },
+    { name: "Seville", latitude: 37.3891, longitude: -5.9845 },
+    { name: "Valencia", latitude: 39.4699, longitude: -0.3763 },
+  ],
+  Ukraine: [
+    { name: "Dnipro", latitude: 48.4647, longitude: 35.0462 },
+    { name: "Kharkiv", latitude: 49.9935, longitude: 36.2304 },
+    { name: "Kyiv", latitude: 50.4501, longitude: 30.5234 },
+    { name: "Lviv", latitude: 49.8397, longitude: 24.0297 },
+    { name: "Odesa", latitude: 46.4825, longitude: 30.7233 },
+  ],
+  "United Kingdom": [
+    { name: "Birmingham", latitude: 52.4862, longitude: -1.8904 },
+    { name: "Edinburgh", latitude: 55.9533, longitude: -3.1883 },
+    { name: "Liverpool", latitude: 53.4084, longitude: -2.9916 },
+    { name: "London", latitude: 51.5074, longitude: -0.1278 },
+    { name: "Manchester", latitude: 53.4808, longitude: -2.2426 },
+  ],
+  "United States": [
+    { name: "Chicago", latitude: 41.8781, longitude: -87.6298 },
+    { name: "Houston", latitude: 29.7604, longitude: -95.3698 },
+    { name: "Los Angeles", latitude: 34.0522, longitude: -118.2437 },
+    { name: "Miami", latitude: 25.7617, longitude: -80.1918 },
+    { name: "New York", latitude: 40.7128, longitude: -74.006 },
+    { name: "San Francisco", latitude: 37.7749, longitude: -122.4194 },
+  ],
+};

@@ -1,13 +1,14 @@
 # Weather Web App
 
-A small, dependency-free weather app built with plain HTML, CSS, and JavaScript — no frameworks, no build step. It uses the free [Open-Meteo](https://open-meteo.com/) APIs (no API key required) to geocode a city name and fetch its weather.
+A small, dependency-free weather app built with plain HTML, CSS, and JavaScript — no frameworks, no build step. You pick a country and then a city, and it fetches the weather from the free [Open-Meteo](https://open-meteo.com/) API (no API key required).
 
 ## Features
 
-- Search any city by name
+- Pick a country, then a city (cascading dropdowns from a built-in list)
 - Current weather: temperature, conditions, wind, and humidity (°C, km/h)
 - 7-day forecast: each day shows the date, a weather emoji, and the high/low temperature
 - Interactive map (Leaflet + OpenStreetMap) with a marker on the searched city
+- Left sidebar widget with live exchange rates (BTC-USD, ETH-USD) from the Coinbase public API, auto-refreshing every 60s
 - Clean, modern, responsive UI in English
 - Graceful error handling for "city not found" and network failures
 
@@ -42,9 +43,11 @@ Notes:
 
 ## How it works
 
-1. **Geocoding** — `https://geocoding-api.open-meteo.com/v1/search` turns the city name into latitude/longitude.
+1. **Locations** — countries and their cities (with coordinates) come from a built-in list in `locations.js`. Selecting a city gives its latitude/longitude directly, so no geocoding call is needed.
 2. **Forecast** — `https://api.open-meteo.com/v1/forecast` returns current conditions and a 7-day daily forecast for those coordinates.
 3. **Map** — those same coordinates are used to center a [Leaflet](https://leafletjs.com/) map (OpenStreetMap tiles, no API key) and drop a marker on the city.
+
+To add more places, edit `locations.js` — each country maps to an array of `{ name, latitude, longitude }`.
 
 WMO weather codes are mapped to emojis and human-readable descriptions in `script.js`.
 
@@ -52,4 +55,5 @@ WMO weather codes are mapped to emojis and human-readable descriptions in `scrip
 
 - `index.html` — markup and structure
 - `styles.css` — styling and responsive layout
-- `script.js` — API calls, rendering, and error handling
+- `locations.js` — built-in country → cities dataset with coordinates
+- `script.js` — dropdown logic, API calls, rendering, and error handling
