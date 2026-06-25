@@ -26,29 +26,35 @@ body {
   line-height: 1.5;
 }
 
-/* Layout: left sidebar + main content */
+/* Layout: left sidebar + main content + right rail */
 .layout {
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
-  max-width: 1040px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .container {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 760px;
 }
 
 /* Left sidebar */
 .sidebar {
-  flex: 0 0 220px;
+  flex: 0 0 200px;
   position: sticky;
   top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+}
+
+/* Right rail */
+.right-rail {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 2rem;
 }
 
 /* Logo */
@@ -150,6 +156,14 @@ body {
   min-height: 0.9rem;
 }
 
+@media (max-width: 1024px) {
+  .right-rail {
+    position: static;
+    flex: 1 1 100%;
+    order: 3;
+  }
+}
+
 @media (max-width: 860px) {
   .layout {
     flex-direction: column;
@@ -157,6 +171,10 @@ body {
   }
   .sidebar {
     position: static;
+    width: 100%;
+    flex-basis: auto;
+  }
+  .right-rail {
     width: 100%;
     flex-basis: auto;
   }
