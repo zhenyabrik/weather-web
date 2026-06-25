@@ -309,8 +309,8 @@ window.addEventListener("DOMContentLoaded", function () {
 window.addEventListener("DOMContentLoaded", function () {
   populateCountries();
 
-  const defaultCountry = "United Kingdom";
-  const defaultCityName = "London";
+  const defaultCountry = "Hungary";
+  const defaultCityName = "Budapest";
   countrySelect.value = defaultCountry;
   populateCities(defaultCountry);
 

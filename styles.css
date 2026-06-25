@@ -26,7 +26,7 @@ body {
   line-height: 1.5;
 }
 
-/* Layout: left rates sidebar + main content */
+/* Layout: left sidebar + main content */
 .layout {
   display: flex;
   align-items: flex-start;
@@ -41,11 +41,62 @@ body {
   max-width: 760px;
 }
 
-/* Rates widget */
-.rates {
+/* Left sidebar */
+.sidebar {
   flex: 0 0 220px;
   position: sticky;
   top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo__icon {
+  flex: 0 0 auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+}
+
+.logo__text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Menu */
+.menu__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.menu__link {
+  display: block;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.menu__link:hover,
+.menu__link.is-active {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Rates widget */
+.rates {
   padding: 1.25rem;
 }
 
@@ -104,7 +155,7 @@ body {
     flex-direction: column;
     max-width: 760px;
   }
-  .rates {
+  .sidebar {
     position: static;
     width: 100%;
     flex-basis: auto;

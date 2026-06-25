@@ -4,7 +4,8 @@ A small, dependency-free weather app built with plain HTML, CSS, and JavaScript 
 
 ## Features
 
-- Pick a country, then a city (cascading dropdowns from a built-in list)
+- Branded as **Meteora** with an SVG logo, plus a left sidebar menu (Page 1–5) linking to separate pages
+- Pick a country, then a city (cascading dropdowns from a built-in list); defaults to Budapest on load
 - Current weather: temperature, conditions, wind, and humidity (°C, km/h)
 - 7-day forecast: each day shows the date, a weather emoji, and the high/low temperature
 - Interactive map (Leaflet + OpenStreetMap) with a marker on the searched city
@@ -53,7 +54,8 @@ WMO weather codes are mapped to emojis and human-readable descriptions in `scrip
 
 ## Files
 
-- `index.html` — markup and structure
+- `index.html` — main weather page (logo, sidebar menu, weather UI)
+- `page1.html` … `page5.html` — the five menu pages
 - `styles.css` — styling and responsive layout
 - `locations.js` — built-in country → cities dataset with coordinates
 - `script.js` — dropdown logic, API calls, rendering, and error handling
