@@ -55,6 +55,7 @@ body {
   flex: 0 0 220px;
   position: sticky;
   top: 2rem;
+  padding-top: 11rem;
 }
 
 /* Logo */
@@ -78,6 +79,10 @@ body {
 }
 
 /* Menu */
+.menu {
+  margin-top: 7rem;
+}
+
 .menu__list {
   list-style: none;
   display: flex;
@@ -174,9 +179,13 @@ body {
     width: 100%;
     flex-basis: auto;
   }
+  .menu {
+    margin-top: 0;
+  }
   .right-rail {
     width: 100%;
     flex-basis: auto;
+    padding-top: 0;
   }
 }
 
