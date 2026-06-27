@@ -301,9 +301,72 @@ async function loadRates() {
 window.addEventListener("DOMContentLoaded", function () {
   buildRatesRows();
   loadRates();
+  buildStocksRows();
+  loadStocks();
   // Refresh prices every 60 seconds.
   setInterval(loadRates, 60000);
+  setInterval(loadStocks, 60000);
 });
+
+// --- Stocks widget ---
+// Yahoo Finance public chart endpoint (no API key required).
+// SpaceX is a private company — displayed as "Private".
+const STOCK_TICKERS = [
+  { symbol: "MSFT",  label: "MSFT"   },
+  { symbol: "TSLA",  label: "Tesla"  },
+  { symbol: null,    label: "SpaceX", isPrivate: true },
+  { symbol: "AMZN",  label: "Amazon" },
+];
+
+const stocksList    = document.getElementById("stocks-list");
+const stocksUpdated = document.getElementById("stocks-updated");
+
+async function fetchStockPrice(symbol) {
+  const res = await fetch(
+    "https://query1.finance.yahoo.com/v8/finance/chart/" +
+      symbol +
+      "?interval=1d&range=1d"
+  );
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return data.chart.result[0].meta.regularMarketPrice;
+}
+
+function buildStocksRows() {
+  stocksList.innerHTML = "";
+  STOCK_TICKERS.forEach(function (stock) {
+    const li = document.createElement("li");
+    li.className = "rate";
+    if (stock.isPrivate) {
+      li.innerHTML =
+        '<span class="rate__pair">' + stock.label + "</span>" +
+        '<span class="rate__price stock__price--private">Private</span>';
+    } else {
+      li.innerHTML =
+        '<span class="rate__pair">' + stock.label + "</span>" +
+        '<span class="rate__price" data-stock="' + stock.symbol + '">…</span>';
+    }
+    stocksList.appendChild(li);
+  });
+}
+
+async function loadStocks() {
+  await Promise.all(
+    STOCK_TICKERS.filter(function (s) { return !s.isPrivate; }).map(async function (stock) {
+      const priceEl = stocksList.querySelector('[data-stock="' + stock.symbol + '"]');
+      if (!priceEl) return;
+      try {
+        const price = await fetchStockPrice(stock.symbol);
+        priceEl.textContent = formatUsd(price);
+        priceEl.classList.remove("rate__price--na");
+      } catch (err) {
+        priceEl.textContent = "n/a";
+        priceEl.classList.add("rate__price--na");
+      }
+    })
+  );
+  stocksUpdated.textContent = "Updated " + new Date().toLocaleTimeString("en-US");
+}
 
 // On first paint: fill the country list and preselect a default location.
 window.addEventListener("DOMContentLoaded", function () {

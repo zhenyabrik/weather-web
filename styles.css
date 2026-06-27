@@ -111,6 +111,39 @@ body {
   padding: 1.25rem;
 }
 
+/* Stocks widget */
+.stocks {
+  margin-top: 1rem;
+  padding: 1.25rem;
+}
+
+.stocks__title {
+  font-size: 1.1rem;
+  margin-bottom: 0.85rem;
+}
+
+.stocks__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.stocks__updated {
+  margin-top: 0.9rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: right;
+  min-height: 0.9rem;
+}
+
+.stock__price--private {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 600;
+}
+
 .rates__title {
   font-size: 1.1rem;
   margin-bottom: 0.85rem;
