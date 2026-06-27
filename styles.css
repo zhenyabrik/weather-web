@@ -56,6 +56,9 @@ body {
   position: sticky;
   top: 2rem;
   padding-top: 11rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 /* Logo */
@@ -113,7 +116,6 @@ body {
 
 /* Stocks widget */
 .stocks {
-  margin-top: 1rem;
   padding: 1.25rem;
 }
 

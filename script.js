@@ -301,71 +301,77 @@ async function loadRates() {
 window.addEventListener("DOMContentLoaded", function () {
   buildRatesRows();
   loadRates();
-  buildStocksRows();
-  loadStocks();
   // Refresh prices every 60 seconds.
   setInterval(loadRates, 60000);
-  setInterval(loadStocks, 60000);
+
+  initStocksWidget();
 });
 
 // --- Stocks widget ---
-// Yahoo Finance public chart endpoint (no API key required).
-// SpaceX is a private company — displayed as "Private".
+// Fetches via allorigins.win proxy to bypass CORS on Yahoo Finance v7 quote API.
 const STOCK_TICKERS = [
-  { symbol: "MSFT",  label: "MSFT"   },
-  { symbol: "TSLA",  label: "Tesla"  },
-  { symbol: null,    label: "SpaceX", isPrivate: true },
-  { symbol: "AMZN",  label: "Amazon" },
+  { symbol: "MSFT", label: "MSFT"   },
+  { symbol: "TSLA", label: "Tesla"  },
+  { symbol: "SPCX", label: "SpaceX" },
+  { symbol: "AMZN", label: "Amazon" },
 ];
 
-const stocksList    = document.getElementById("stocks-list");
-const stocksUpdated = document.getElementById("stocks-updated");
-
 async function fetchStockPrice(symbol) {
+  const target =
+    "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" +
+    symbol +
+    "&fields=regularMarketPrice";
   const res = await fetch(
-    "https://query1.finance.yahoo.com/v8/finance/chart/" +
-      symbol +
-      "?interval=1d&range=1d"
+    "https://api.allorigins.win/raw?url=" + encodeURIComponent(target)
   );
   if (!res.ok) throw new Error("HTTP " + res.status);
   const data = await res.json();
-  return data.chart.result[0].meta.regularMarketPrice;
+  const result =
+    data.quoteResponse &&
+    data.quoteResponse.result &&
+    data.quoteResponse.result[0];
+  if (!result) throw new Error("No data");
+  return result.regularMarketPrice;
 }
 
-function buildStocksRows() {
-  stocksList.innerHTML = "";
-  STOCK_TICKERS.forEach(function (stock) {
-    const li = document.createElement("li");
-    li.className = "rate";
-    if (stock.isPrivate) {
-      li.innerHTML =
-        '<span class="rate__pair">' + stock.label + "</span>" +
-        '<span class="rate__price stock__price--private">Private</span>';
-    } else {
+function initStocksWidget() {
+  const stocksList    = document.getElementById("stocks-list");
+  const stocksUpdated = document.getElementById("stocks-updated");
+  if (!stocksList || !stocksUpdated) return;
+
+  function buildRows() {
+    stocksList.innerHTML = "";
+    STOCK_TICKERS.forEach(function (stock) {
+      const li = document.createElement("li");
+      li.className = "rate";
       li.innerHTML =
         '<span class="rate__pair">' + stock.label + "</span>" +
         '<span class="rate__price" data-stock="' + stock.symbol + '">…</span>';
-    }
-    stocksList.appendChild(li);
-  });
-}
+      stocksList.appendChild(li);
+    });
+  }
 
-async function loadStocks() {
-  await Promise.all(
-    STOCK_TICKERS.filter(function (s) { return !s.isPrivate; }).map(async function (stock) {
-      const priceEl = stocksList.querySelector('[data-stock="' + stock.symbol + '"]');
-      if (!priceEl) return;
-      try {
-        const price = await fetchStockPrice(stock.symbol);
-        priceEl.textContent = formatUsd(price);
-        priceEl.classList.remove("rate__price--na");
-      } catch (err) {
-        priceEl.textContent = "n/a";
-        priceEl.classList.add("rate__price--na");
-      }
-    })
-  );
-  stocksUpdated.textContent = "Updated " + new Date().toLocaleTimeString("en-US");
+  async function loadStocks() {
+    await Promise.all(
+      STOCK_TICKERS.map(async function (stock) {
+        const priceEl = stocksList.querySelector('[data-stock="' + stock.symbol + '"]');
+        if (!priceEl) return;
+        try {
+          const price = await fetchStockPrice(stock.symbol);
+          priceEl.textContent = formatUsd(price);
+          priceEl.classList.remove("rate__price--na");
+        } catch (_) {
+          priceEl.textContent = "n/a";
+          priceEl.classList.add("rate__price--na");
+        }
+      })
+    );
+    stocksUpdated.textContent = "Updated " + new Date().toLocaleTimeString("en-US");
+  }
+
+  buildRows();
+  loadStocks();
+  setInterval(loadStocks, 60000);
 }
 
 // On first paint: fill the country list and preselect a default location.
